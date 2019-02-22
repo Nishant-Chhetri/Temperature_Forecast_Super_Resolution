@@ -1,0 +1,2 @@
+history_epoch_7  is training history of mse loss and built score function
+history_val is validation history of mse loss and built score function
