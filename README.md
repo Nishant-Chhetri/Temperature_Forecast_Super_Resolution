@@ -55,16 +55,16 @@ vi.	Adds up all the scores to gives final score.
 Here is the Architecture for my ConvNet Model in keras.
 
 
-input_1 (InputLayer)         (None, 256, 256, 15)      0         
-conv1 (Conv2D)               (None, 256, 256, 16)      2176      
-bn_conv1 (BatchNormalization (None, 256, 256, 16)      64        
-activation_1 (Activation)    (None, 256, 256, 16)      0         
-conv2 (Conv2D)               (None, 256, 256, 1)       145       
-bn_conv2 (BatchNormalization (None, 256, 256, 1)       4         
-activation_2 (Activation)    (None, 256, 256, 1)       0         
-Total params: 2,389
+1. input_1 (InputLayer)         	(None, 256, 256, 15)   		   0        
+2. conv1 (Conv2D)               	(None, 256, 256, 16)   	 	  2176      
+3. bn_conv1 (BatchNormalization 	(None, 256, 256, 16)    	  64        
+4. activation_1 (Activation)   	 (None, 256, 256, 16)   	   0         
+5. conv2 (Conv2D)               	(None, 256, 256, 1)     	  145       
+6. bn_conv2 (BatchNormalization 	(None, 256, 256, 1)      	 4         
+7. activation_2 (Activation)    	(None, 256, 256, 1)      	 0         
+**Total params: 2,389
 Trainable params: 2,355
-Non-trainable params: 34
+Non-trainable params: 34**
 
 Optimization: optimizer='adam' , loss='mean_squared_error', metrics=scoreCalculation  (Function Built in Step 3. )
 
@@ -103,8 +103,11 @@ For evaluating each date and time entry individually, I used model.evaluate() fo
  
 Then I stored each date and time record’s result to pandas test_results Dataframe having record for each date and time.  
 Using test_resuts.describe() we can see that:
-The average loss for test_results is  :  average_loss=0.806500
-The average score for test_results is: average_score=5.001534
+
+The average loss for test_results is  :  **average_loss=0.806500**
+
+The average score for test_results is: **average_score=5.001534**
+
 Results are stored in test_results.csv files which can be reproduced from given code. 
 
 *Improvements: As I had limited computer resources, therefore could not built a deep enough Network like ResNet which product state of the art results for Super Resolution Problems. 
