@@ -21,32 +21,32 @@ c.	General Libraries: numpy, pandas, matplotlib, pickle, os, time
 
 ### 2.	Preparing to Load Data:
 
-a.	Generated a list of names of input_training data for training my Model. It includes 51 input_training files from ‘input_training_0000_0099.npy’ to ‘input_training_5000_5099.npy’.
-b.	Generated a list of names of input_training data for validation of my model. It includes 3 input_training files from ‘input_training_5100_5199.npy’ to ‘input_training_5300_5342.npy’.
-c.	Generated a list of 51 names of label_training data for target training of my model from ‘label_training_0000_0099.npy’ to ‘label_training_5000_5099.npy’. 
-d.	Generated a list of 3 label_training data for target validation of my model from ‘label_training_5100_5199.npy’ to ‘label_training_5300_5342.npy’.
-e.	Now I created a dictionary named ‘partition’ which stores all the above lists as partition['train_input'], partition['val_input'], partition['train_label'], partition['val_label'].
+1. Generated a list of names of input_training data for training my Model. It includes 51 input_training files from ‘input_training_0000_0099.npy’ to ‘input_training_5000_5099.npy’.
+2. Generated a list of names of input_training data for validation of my model. It includes 3 input_training files from ‘input_training_5100_5199.npy’ to ‘input_training_5300_5342.npy’.
+3. Generated a list of 51 names of label_training data for target training of my model from ‘label_training_0000_0099.npy’ to ‘label_training_5000_5099.npy’. 
+4. Generated a list of 3 label_training data for target validation of my model from ‘label_training_5100_5199.npy’ to ‘label_training_5300_5342.npy’.
+5. Now I created a dictionary named ‘partition’ which stores all the above lists as partition['train_input'], partition['val_input'], partition['train_label'], partition['val_label'].
 
-f.	Created fuction named load_data which performs following work:
-i.	np.load(): Loads the data
-ii.	np.transpose(): transposes the data for training in keras model
-iii.	standardize() : normalizes the data for better performance.
+6. Created fuction named load_data which performs following work:
+- np.load(): Loads the data
+- np.transpose(): transposes the data for training in keras model
+- standardize() : normalizes the data for better performance.
 
 
 ### 3.	Creating Score Functions:
 
 It includes the following functions:
-a.	meanDifferenceCalculation()
-b.	minDifferenceCalculation()
-c.	maxDifferenceCalculation()
-d.	scoreCalculation():
-i.	Creates a DSSIMObjective object with kernel_size=4
-ii.	Calculates DSSIM loss for images.
-iii.	Then calculates SSIM from DSSIM using formula:
+1. meanDifferenceCalculation()
+2. minDifferenceCalculation()
+3. maxDifferenceCalculation()
+4. scoreCalculation():
+- Creates a DSSIMObjective object with kernel_size=4
+- Calculates DSSIM loss for images.
+- Then calculates SSIM from DSSIM using formula:
 ssim =  1 - ( 2 * dssim ).
-iv.	Calculates Mean Squared Error
-v.	Calculates meanDiff, minDiff and maxDiff (a. b. and c.)
-vi.	Adds up all the scores to gives final score.
+- Calculates Mean Squared Error
+- Calculates meanDiff, minDiff and maxDiff (a. b. and c.)
+- Adds up all the scores to gives final score.
 
 
 
