@@ -1,7 +1,138 @@
-# Temperature_Super_Resolution
+# Temperature_Forecast_Super_Resolution
+
 Increasing Fine-Scale Temperature Details from Weather Model Forecasts
 
-PROBLEM STATEMENT
+# PROBLEM STATEMENT
 
 This challenge is to increase the resolution (the level of detail)of 2D surface temperature forecasts obtained from Environment and Climate Change Canada (ECCC) ’s weather forecast model, using as labelled images 2D temperature analysis at higher resolution. The scale factor between the model and the higher resolution analysis is 4 (from 10 km to 2.5 km). Numerous and relevant 2D low-resolution weather forecast fields are provided as predictors in the training set. In addition to temperature, these include fields like cloud coverage, wind, humidity, topography, etc. are also included in the training set files.
 
+ ![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/content_MSC_image.jpg)
+
+Here are examples of a temperature field over Western Canada at low resolution (10 km – left) and high resolution (2.5 km – right). The increase of resolution represents a factor of 4.
+
+# SOLUTION:
+	
+### 1.	Libraries Used:
+a.	I used Keras for Deep Learning and Theano as Backend
+b.	Used DSSIMObjective from keras_contrib.losses. Later converted DSSIM to SSIM for score calculation.
+(https://github.com/keras-team/keras-contrib)
+c.	General Libraries: numpy, pandas, matplotlib, pickle, os, time
+
+
+### 2.	Preparing to Load Data:
+
+a.	Generated a list of names of input_training data for training my Model. It includes 51 input_training files from ‘input_training_0000_0099.npy’ to ‘input_training_5000_5099.npy’.
+b.	Generated a list of names of input_training data for validation of my model. It includes 3 input_training files from ‘input_training_5100_5199.npy’ to ‘input_training_5300_5342.npy’.
+c.	Generated a list of 51 names of label_training data for target training of my model from ‘label_training_0000_0099.npy’ to ‘label_training_5000_5099.npy’. 
+d.	Generated a list of 3 label_training data for target validation of my model from ‘label_training_5100_5199.npy’ to ‘label_training_5300_5342.npy’.
+e.	Now I created a dictionary named ‘partition’ which stores all the above lists as partition['train_input'], partition['val_input'], partition['train_label'], partition['val_label'].
+
+f.	Created fuction named load_data which performs following work:
+i.	np.load(): Loads the data
+ii.	np.transpose(): transposes the data for training in keras model
+iii.	standardize() : normalizes the data for better performance.
+
+
+### 3.	Creating Score Functions:
+
+It includes the following functions:
+a.	meanDifferenceCalculation()
+b.	minDifferenceCalculation()
+c.	maxDifferenceCalculation()
+d.	scoreCalculation():
+i.	Creates a DSSIMObjective object with kernel_size=4
+ii.	Calculates DSSIM loss for images.
+iii.	Then calculates SSIM from DSSIM using formula:
+ssim =  1 - ( 2 * dssim ).
+iv.	Calculates Mean Squared Error
+v.	Calculates meanDiff, minDiff and maxDiff (a. b. and c.)
+vi.	Adds up all the scores to gives final score.
+
+
+
+### 4.	Convolution Neural Network 
+
+Here is the Architecture for my ConvNet Model in keras.
+
+_________________________________________________________________
+Layer (type)                 Output Shape              Param    
+=================================================================
+input_1 (InputLayer)         (None, 256, 256, 15)      0         
+_________________________________________________________________
+conv1 (Conv2D)               (None, 256, 256, 16)      2176      
+_________________________________________________________________
+bn_conv1 (BatchNormalization (None, 256, 256, 16)      64        
+_________________________________________________________________
+activation_1 (Activation)    (None, 256, 256, 16)      0         
+_________________________________________________________________
+conv2 (Conv2D)               (None, 256, 256, 1)       145       
+_________________________________________________________________
+bn_conv2 (BatchNormalization (None, 256, 256, 1)       4         
+_________________________________________________________________
+activation_2 (Activation)    (None, 256, 256, 1)       0         
+=================================================================
+Total params: 2,389
+Trainable params: 2,355
+Non-trainable params: 34
+
+Optimization: optimizer='adam' , loss='mean_squared_error', metrics=scoreCalculation  (Function Built in Step 3. )
+
+Explanation for fitting the model: As I was limited on computer resources I had to train each input file one by one. My system could not take the load of the memory of loading multiple files at once. Thus I was loading one file at a time, performing preprocessing and then fitting the file data in model.
+Therefore I used a for loop for running 7 epochs and each epoch was training on 51 files and validating on 3 files. 
+My validation split was of only 3 files because I wanted to mimic the train and test split size. As test data had around 248 entries thus I used 3 files for validation which has similar number of entries.   
+
+
+
+### 5.	Plotting train and validation (score and loss)
+
+Before plotting the results I wrote some simple scripts to extract training Loss and Score from saved history of loss and score.
+ Then I Averaged up score/loss to give score/loss for 1 epoch as training score is for each file individually. So I averaged each batch of 51 scores to give score for 1 epoch. 
+Same was done for Validation also where number of files were 3. 
+
+ 
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Plots/train_loss.jpg)
+
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Plots/train_score.jpg)
+
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Plots/validation_loss.jpg)
+
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Plots/validation_score.jpg)
+
+
+ 
+
+ 
+
+ 
+	
+### 6.	Results with test data
+
+For evaluating each date and time entry individually, I used model.evaluate() for each record separately by reshaping each record to hold single entry/record ie. (1,256,256,15) and (1,256,256,1) and appended the loss and score to test_history list. 
+
+
+ 
+ 
+Then I stored each date and time record’s result to pandas test_results Dataframe having record for each date and time as follows.  
+	DateTime	loss	score
+0	2018011612	1.125401	6.509701
+1	2018011615	1.139553	6.571133
+2	2018011618	0.676640	5.577474
+3	2018011621	0.336074	4.362339
+4	2018011700	0.421846	4.661493
+
+Using test_resuts.describe() we can see that:
+The average loss for test_results is  :  average_loss=0.806500
+The average score for test_results is: average_score=5.001534
+Results are stored in test_results.csv files which can be reproduced from given code. 
+
+	loss	score
+count	248.000000	248.000000
+mean	0.806500	5.001534
+std	0.626931	1.545484
+min	0.043003	2.385495
+25%	0.346850	3.940689
+50%	0.648364	4.857776
+75%	1.062439	5.815931
+max	2.892654	9.489738
+
+*Improvements: As I had limited computer resources, therefore could not built a deep enough Network like ResNet which product state of the art results for Super Resolution Problems. 
