@@ -54,17 +54,7 @@ ssim =  1 - ( 2 * dssim ).
 
 Here is the Architecture for my ConvNet Model in keras.
 
-
-1. input_1 (InputLayer)         	(None, 256, 256, 15)   		   0        
-2. conv1 (Conv2D)               	(None, 256, 256, 16)   	 	  2176      
-3. bn_conv1 (BatchNormalization 	(None, 256, 256, 16)    	  64        
-4. activation_1 (Activation)   	 (None, 256, 256, 16)   	   0         
-5. conv2 (Conv2D)               	(None, 256, 256, 1)     	  145       
-6. bn_conv2 (BatchNormalization 	(None, 256, 256, 1)      	 4         
-7. activation_2 (Activation)    	(None, 256, 256, 1)      	 0         
-**Total params: 2,389
-Trainable params: 2,355
-Non-trainable params: 34**
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Saved%20Model/Model%20Architecture.bmp)
 
 Optimization: optimizer='adam' , loss='mean_squared_error', metrics=scoreCalculation  (Function Built in Step 3. )
 
