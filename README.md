@@ -54,23 +54,14 @@ vi.	Adds up all the scores to gives final score.
 
 Here is the Architecture for my ConvNet Model in keras.
 
-_________________________________________________________________
-Layer (type)                 Output Shape              Param    
-=================================================================
+
 input_1 (InputLayer)         (None, 256, 256, 15)      0         
-_________________________________________________________________
 conv1 (Conv2D)               (None, 256, 256, 16)      2176      
-_________________________________________________________________
 bn_conv1 (BatchNormalization (None, 256, 256, 16)      64        
-_________________________________________________________________
 activation_1 (Activation)    (None, 256, 256, 16)      0         
-_________________________________________________________________
 conv2 (Conv2D)               (None, 256, 256, 1)       145       
-_________________________________________________________________
 bn_conv2 (BatchNormalization (None, 256, 256, 1)       4         
-_________________________________________________________________
 activation_2 (Activation)    (None, 256, 256, 1)       0         
-=================================================================
 Total params: 2,389
 Trainable params: 2,355
 Non-trainable params: 34
@@ -100,39 +91,20 @@ Same was done for Validation also where number of files were 3.
 
 
  
-
- 
-
- 
 	
 ### 6.	Results with test data
 
 For evaluating each date and time entry individually, I used model.evaluate() for each record separately by reshaping each record to hold single entry/record ie. (1,256,256,15) and (1,256,256,1) and appended the loss and score to test_history list. 
 
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Plots/test_loss_for_each_record.jpg)
 
+![alt text](https://github.com/Nishant-Chhetri/Temperature_Forecast_Super_Resolution/blob/master/Results/Plots/test_score_for_each_record.jpg)
  
  
-Then I stored each date and time record’s result to pandas test_results Dataframe having record for each date and time as follows.  
-	DateTime	loss	score
-0	2018011612	1.125401	6.509701
-1	2018011615	1.139553	6.571133
-2	2018011618	0.676640	5.577474
-3	2018011621	0.336074	4.362339
-4	2018011700	0.421846	4.661493
-
+Then I stored each date and time record’s result to pandas test_results Dataframe having record for each date and time.  
 Using test_resuts.describe() we can see that:
 The average loss for test_results is  :  average_loss=0.806500
 The average score for test_results is: average_score=5.001534
 Results are stored in test_results.csv files which can be reproduced from given code. 
-
-	loss	score
-count	248.000000	248.000000
-mean	0.806500	5.001534
-std	0.626931	1.545484
-min	0.043003	2.385495
-25%	0.346850	3.940689
-50%	0.648364	4.857776
-75%	1.062439	5.815931
-max	2.892654	9.489738
 
 *Improvements: As I had limited computer resources, therefore could not built a deep enough Network like ResNet which product state of the art results for Super Resolution Problems. 
